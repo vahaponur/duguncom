@@ -1,8 +1,8 @@
 package test
 
 import (
-	"duguncom"
 	"fmt"
+	"github.com/vahaponur/duguncom"
 	"strconv"
 	"testing"
 )

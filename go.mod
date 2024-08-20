@@ -1,4 +1,4 @@
-module duguncom
+module github.com/vahaponur/duguncom
 
 go 1.22.2
 
