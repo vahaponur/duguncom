@@ -25,7 +25,7 @@ type GetOfferResponse struct {
 	Meta Meta   `json:"meta"`
 }
 
-func GetOfferRequest(login *LoginResponse, params GetOfferParams) (GetOfferResponse, error) {
+func GetOfferRequest(login LoginResponse, params GetOfferParams) (GetOfferResponse, error) {
 	client := resty.New()
 	var response GetOfferResponse
 	resp, err := client.R().
@@ -46,10 +46,9 @@ func GetOfferRequest(login *LoginResponse, params GetOfferParams) (GetOfferRespo
 }
 
 // SendSmsToCustomers send sms to leads via Dugun.com wait time is milliseconds between requests.
-func SendSmsToCustomers(login *LoginResponse, leadIds []string, message string, waitTime int) error {
+func SendSmsToCustomers(login LoginResponse, leadIds []string, message string, waitTime int) error {
 	client := resty.New()
 	baseUrl := "https://api.dugun.com/leads/"
-	//IDyi ortaya alan salağa selam olsun
 	tail := "/messages/sms"
 	type MessageBody struct {
 		Body string `json:"body"`

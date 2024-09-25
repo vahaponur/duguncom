@@ -26,12 +26,13 @@ type LoginResponse struct {
 	} `json:"customer"`
 }
 
-func Login(username, password string, userType ...string) (*LoginResponse, error) {
+func Login(username, password string, userType ...string) (LoginResponse, error) {
 	client := resty.New()
 	utype := "customer"
 	if len(userType) > 0 {
 		utype = userType[0]
 	}
+	loginResp := LoginResponse{}
 	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]interface{}{
@@ -39,16 +40,15 @@ func Login(username, password string, userType ...string) (*LoginResponse, error
 			"password": password,
 			"userType": utype,
 		}).
-		SetResult(&LoginResponse{}).
+		SetResult(&loginResp).
 		Post(LoginURL)
 
 	if err != nil {
-		return nil, err
+		return LoginResponse{}, err
 	}
 
 	if resp.IsError() {
-		return nil, fmt.Errorf("error: %s", resp.Status())
+		return LoginResponse{}, fmt.Errorf("error: %s", resp.Status())
 	}
-	loginResp := resp.Result().(*LoginResponse)
 	return loginResp, nil
 }

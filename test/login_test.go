@@ -22,8 +22,8 @@ func TestSms(t *testing.T) {
 	fmt.Println(resp)
 	response, err := duguncom.GetOfferRequest(resp, duguncom.GetOfferParams{
 		Limit: "100",
-		Start: "2024-08-16",
-		End:   "2024-08-19",
+		Start: "2024-08-28",
+		End:   "2024-08-29",
 		Page:  "1",
 	})
 	if err != nil {
@@ -39,4 +39,5 @@ func TestSms(t *testing.T) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+
 }
