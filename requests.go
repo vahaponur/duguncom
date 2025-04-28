@@ -56,23 +56,37 @@ func SendSmsToCustomers(login LoginResponse, leadIds []string, message string, w
 	messageBody := MessageBody{
 		Body: message,
 	}
+
+	var errList []error
+
 	for i, leadId := range leadIds {
 		if i == 0 {
 			client.Debug = true
 		} else {
 			client.Debug = false
 		}
+
 		resp, err := client.R().SetHeader("Content-Type", "application/json").
 			SetHeader("x-access-token", login.AccessToken.ID).
 			SetHeader("x-consumer-key", login.ConsumerKey).SetBody(messageBody).Post(baseUrl + leadId + tail)
+
 		if err != nil {
-			return err
+			errList = append(errList, fmt.Errorf("error for leadId %s: %w", leadId, err))
+			continue // Continue with next leadId
 		}
+
 		if resp.IsError() {
-			return fmt.Errorf("error: %s", resp.Status())
+			errList = append(errList, fmt.Errorf("error for leadId %s: status %s", leadId, resp.Status()))
+			// Continue with next leadId
 		}
+
 		time.Sleep(time.Duration(waitTime) * time.Millisecond)
 	}
-	return nil
 
+	// If there were any errors, return them combined
+	if len(errList) > 0 {
+		return fmt.Errorf("encountered %d errors: %v", len(errList), errList)
+	}
+
+	return nil
 }
